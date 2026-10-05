@@ -56,10 +56,11 @@ TARGET_ENABLE_MEDIADRM_64 := true
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     $(PLATFORM_PATH)/framework_compatibility_matrix.xml \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
-    hardware/qcom-caf/common/vendor_framework_compatibility_matrix_legacy.xml \
     vendor/lineage/config/device_framework_matrix.xml
 DEVICE_MANIFEST_FILE += $(PLATFORM_PATH)/manifest.xml
-DEVICE_MATRIX_FILE := hardware/interfaces/compatibility_matrix.xml
+# DEVICE_MATRIX_FILE is intentionally not set: lineage-20.0 provides
+# system/libhidl/vintfdata/device_compatibility_matrix.default.xml, and this
+# branch has no qcom-caf compatibility_matrix.xml to point at.
 TARGET_FS_CONFIG_GEN := $(PLATFORM_PATH)/config.fs
 
 # Kernel

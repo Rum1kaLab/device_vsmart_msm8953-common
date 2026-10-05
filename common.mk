@@ -278,7 +278,8 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.vibrator.service
 
 # Vintf
-PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := true
+# PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS is not enabled: lineage-20.0's
+# kernel FCM (level 5) has no requirements entry for kernel 4.9.
 
 # WLAN firmware symlinks
 PRODUCT_PACKAGES += \
@@ -287,7 +288,7 @@ PRODUCT_PACKAGES += \
 
 # Wi-Fi
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service.legacy \
+    android.hardware.wifi@1.0-service.legacy20 \
     libwpa_client \
     libcld80211 \
     libwifi-hal-ctrl \
