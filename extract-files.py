@@ -52,8 +52,9 @@ blob_fixups: blob_fixups_user_type = {
         .add_needed('libcutils_shim.so'),
     ('system_ext/lib64/lib-imscamera.so', 'system_ext/lib64/lib-imsvideocodec.so'): blob_fixup()
         .add_needed('libgui_shim.so'),
-    'vendor/bin/pm-service': blob_fixup()
-        .add_needed('libutils-v33.so'),
+    # NOTE: no add_needed('libutils-v33.so') for vendor/bin/pm-service on
+    # lineage-20.0: VNDK 33 is the current (source-built) VNDK here and is
+    # reached through the plain libutils.so name via the VNDK apex.
     ('vendor/lib/libmmcamera_faceproc.so', 'vendor/lib/libmmcamera_faceproc2.so'): blob_fixup()
         .clear_symbol_version('__aeabi_memcpy')
         .clear_symbol_version('__aeabi_memset')

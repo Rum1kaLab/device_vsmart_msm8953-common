@@ -5,6 +5,10 @@
 //
 
 // libinit
+// NOTE: lineage-20.0's init has no soong-config hook for device vendor_init
+// libs; libinit_vin8953.cpp is kept for reference only and is not built.
+// Dalvik heap sizing is handled statically by phone-xhdpi-4096-dalvik-heap.mk
+// in common.mk (casuarina ships a single 4 GB RAM configuration).
 cc_library_static {
     name: "libinit_vin8953",
     recovery_available: true,

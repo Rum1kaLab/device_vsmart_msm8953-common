@@ -59,7 +59,7 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix_legacy.xml \
     vendor/lineage/config/device_framework_matrix.xml
 DEVICE_MANIFEST_FILE += $(PLATFORM_PATH)/manifest.xml
-DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
+DEVICE_MATRIX_FILE := hardware/interfaces/compatibility_matrix.xml
 TARGET_FS_CONFIG_GEN := $(PLATFORM_PATH)/config.fs
 
 # Kernel
@@ -102,6 +102,14 @@ TARGET_USERIMAGES_USE_EXT4 := true
 # Platform
 BOARD_USES_QCOM_HARDWARE := true
 TARGET_BOARD_PLATFORM := msm8953
+# lineage-20.0's non-QSSI UM_3_18 mapping points msm8953 at the unmaintained
+# hardware/qcom-caf/msm8996 trees. Use the QSSI-supported legacy UM mapping
+# instead: it selects hardware/qcom-caf/msm8953 (whose self-consistent HAL
+# trees also match how this device's blobs are used) plus the commonsys
+# display namespaces that provide display_intf_headers.
+TARGET_ENFORCES_QSSI := true
+TARGET_USES_HWC2 := true
+TARGET_USES_GRALLOC1 := true
 
 # Power
 TARGET_USES_INTERACTION_BOOST := true

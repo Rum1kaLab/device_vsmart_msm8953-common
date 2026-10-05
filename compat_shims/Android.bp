@@ -1,0 +1,16 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// Backport of LineageOS hardware/lineage/compat's libcrypto_shim from the
+// lineage-22.1 branch: legacy blobs (libwvhidl) reference libcrypto_shim.so.
+// hardware/lineage/compat on lineage-20.0 does not ship it.
+cc_library {
+    name: "libcrypto_shim",
+    srcs: [
+        "libcrypto/cbs.c",
+    ],
+    system_ext_specific: true,
+    vendor_available: true,
+}

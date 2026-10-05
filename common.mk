@@ -3,8 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Add common definitions for Qualcomm
-$(call inherit-product, hardware/qcom-caf/common/common.mk)
+# Qualcomm HALs are picked up via the QCOM_SOONG_NAMESPACE override in
+# BoardConfigCommon.mk (hardware/qcom-caf/msm8953) plus the pathmap from
+# vendor/lineage/build/core/qcom_target.mk. Do not add the CAF tree to
+# PRODUCT_SOONG_NAMESPACES here directly.
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -67,8 +69,15 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
     gralloc.msm8953 \
-    hwcomposer.qcom \
-    vendor.qti.hardware.memtrack-service
+    hwcomposer.msm8953 \
+    libdisplayconfig \
+    libdrmutils \
+    libgpu_tonemapper \
+    libgrallocutils \
+    libqdutils \
+    libqservice \
+    libsdmcore \
+    libsdmutils
 
 $(call soong_config_set,qtidisplay,display_config_variable_info_has_pixel_formats,true)
 
@@ -82,15 +91,12 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint-service.lineage
+    android.hardware.biometrics.fingerprint@2.0-service
 
 # FM
 PRODUCT_PACKAGES += \
     FMRadio \
     libfmjni
-
-$(call soong_config_set,libfmjni,vendor,qcom)
-$(call soong_config_set_bool,libfmjni,no_fm_firmware,true)
 
 # GNSS
 PRODUCT_PACKAGES += \
@@ -115,10 +121,15 @@ PRODUCT_COPY_FILES += \
 
 # Health
 PRODUCT_PACKAGES += \
-    android.hardware.health-service.qti
+    android.hardware.health@2.1-impl-qti \
+    android.hardware.health@2.1-service
+
+# json-c (libjson, vendor partition; required by blob libpdmapper)
+PRODUCT_PACKAGES += libjson
 
 # Init
-$(call soong_config_set,libinit,vendor_init_lib,//$(LOCAL_PATH):libinit_vin8953)
+# NOTE: the libinit vendor_init hook does not exist on lineage-20.0;
+# libinit_vin8953 is not built (see init/Android.bp).
 
 # IMS
 PRODUCT_PACKAGES += \
@@ -132,19 +143,11 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light-service.lineage
-
-# Lineage Health
-PRODUCT_PACKAGES += \
-    vendor.lineage.health-service.default
-
-$(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class/power_supply/battery/battery_charging_enabled)
+    android.hardware.light@2.0-service
 
 # LiveDisplay
 PRODUCT_PACKAGES += \
-    vendor.lineage.livedisplay-service.sdm
-
-$(call soong_config_set,livedisplay_sdm,enable_dm,false)
+    vendor.lineage.livedisplay@2.0-service-sdm
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -163,12 +166,8 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
-# Partitions
-PRODUCT_PACKAGES += \
-    vendor_bt_firmware_mountpoint \
-    vendor_dsp_mountpoint \
-    vendor_firmware_mnt_mountpoint
-
+# Partition mountpoints are handled by fstab/init on lineage-20.0; the
+# vendor_*_mountpoint package names only exist from lineage-21 onwards.
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.2.vendor \
@@ -220,7 +219,7 @@ PRODUCT_COPY_FILES += \
 
 # QTI fwk-detect
 PRODUCT_PACKAGES += \
-    libvndfwk_detect_jni.qti.vendor
+    libvndfwk_detect_jni.qti_vendor
 
 # Ramdisk
 PRODUCT_PACKAGES += \
@@ -248,11 +247,12 @@ PRODUCT_PACKAGES += \
 
 # Soong
 PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH) \
-    bootable/deprecated-ota
+    $(LOCAL_PATH)
 
 # Telephony
 PRODUCT_PACKAGES += \
+    libril \
+    librilutils \
     qti-telephony-hidl-wrapper \
     qti_telephony_hidl_wrapper.xml \
     qti-telephony-utils \
@@ -264,14 +264,14 @@ PRODUCT_BOOT_JARS += \
 
 # Thermal
 PRODUCT_PACKAGES += \
-    android.hardware.thermal-service.qti
+    android.hardware.thermal@2.0-service.qti
 
 # Update
 AB_OTA_UPDATER := false
 
 # USB
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.3-service.basic
+    android.hardware.usb@1.0-service
 
 # Vibrator
 PRODUCT_PACKAGES += \
@@ -287,7 +287,8 @@ PRODUCT_PACKAGES += \
 
 # Wi-Fi
 PRODUCT_PACKAGES += \
-    android.hardware.wifi-service \
+    android.hardware.wifi@1.0-service.legacy \
+    libwpa_client \
     libcld80211 \
     libwifi-hal-ctrl \
     hostapd \

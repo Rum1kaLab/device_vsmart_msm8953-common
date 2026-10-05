@@ -1,0 +1,19 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+// Backport of LineageOS hardware/lineage/compat's libhidlbase_shim from the
+// lineage-22.1 branch: legacy blobs reference libhidlbase_shim.so for ABI
+// symbols removed from libhidlbase (gBnConstructorMap / gBsConstructorMap and
+// Parcel::setData). hardware/lineage/compat on lineage-20.0 does not ship it.
+cc_library {
+    name: "libhidlbase_shim",
+    vendor: true,
+    srcs: [
+        "gBnsConstructorMap.cpp",
+        "Parcel.cpp",
+    ],
+    shared_libs: ["libhidlbase"],
+    compile_multilib: "both",
+}
